@@ -13,17 +13,25 @@ import org.json.JSONObject;
 public class WebUntisRequestManager {
 	private static String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36 OPR/83.0.4254.46";
 	private static final String DEFAULT_ENDPOINT = "/WebUntis/jsonrpc.do";
+	private static boolean printRequests = false;
 
-	public static WebUntisResponse requestPOST(WebUntisRequestMethod method, WebUntisSessionInfo session, String endPoint,
+	public static WebUntisResponse requestPOST(WebUntisRequestMethod method, WebUntisSessionInfo session,
+			String endPoint, String school, String params) throws IOException {
+		return requestPOST(method.NAME, session, endPoint, school, params);
+	}
+
+	public static WebUntisResponse requestPOST(String method, WebUntisSessionInfo session, String endPoint,
 			String school, String params) throws IOException {
 		final URL url = new URL(session.getServer() + getEndPoint(endPoint) + "?school=" + school);
 		if (params == null || params.isEmpty())
 			params = "{}";
-		final String request = "{\"id\":\"" + session.getRequestId() + "\",\"method\":\"" + method.NAME + "\",\"params\":"
+		final String request = "{\"id\":\"" + session.getRequestId() + "\",\"method\":\"" + method + "\",\"params\":"
 				+ params + ",\"jsonrpc\":\"2.0\"}";
 
-		System.out.println("Request[POST]: " + url.toExternalForm());
-		System.out.println("Payload: " + request);
+		if (printRequests) {
+			System.out.println("Request[POST]: " + url.toExternalForm());
+			System.out.println("Payload: " + request);
+		}
 
 		HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 		con.setDoOutput(true);
@@ -78,7 +86,9 @@ public class WebUntisRequestManager {
 	public static WebUntisResponse requestGET(WebUntisSessionInfo session, String endPoint) throws IOException {
 		final URL url = new URL(session.getServer() + endPoint);
 
-		System.out.println("Request[GET]: " + url.toExternalForm());
+		if (printRequests) {
+			System.out.println("Request[GET]: " + url.toExternalForm());
+		}
 
 		HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 		con.setRequestMethod("GET");
@@ -109,11 +119,19 @@ public class WebUntisRequestManager {
 		return endPoint;
 	}
 
+	public static void setUserAgent(String newUserAgent) {
+		userAgent = newUserAgent;
+	}
+	
 	public static String getUserAgent() {
 		return userAgent;
 	}
 
-	public static void setUserAgent(String userAgent) {
-		WebUntisRequestManager.userAgent = userAgent;
+	public static boolean printRequests() {
+		return printRequests;
+	}
+
+	public static void setPrintRequest(boolean value) {
+		printRequests = value;
 	}
 }
