@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 public class WebUntisRequestManager {
 	private static String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36 OPR/83.0.4254.46";
-	private static final String DEFAULT_ENDPOINT = "/WebUntis/jsonrpc.do";
+	private static final String DEFAULT_ENDPOINT = "WebUntis/jsonrpc.do";
 	private static boolean printRequests = false;
 
 	public static WebUntisResponse requestPOST(WebUntisRequestMethod method, WebUntisSessionInfo session,
