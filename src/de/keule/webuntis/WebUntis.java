@@ -106,7 +106,7 @@ public class WebUntis {
 		params.put(new JSONObject().put("userName", userName).put("password", ""));
 
 		WebUntisResponse response = WebUntisRequestManager.requestPOST(WebUntisRequestMethod.GET_APP_SHARED_SECRET,
-				session, "/WebUntis/jsonrpc_intern.do", school, params.toString());
+				session, "WebUntis/jsonrpc_intern.do", school, params.toString());
 		if (response.hasError())
 			throw new WebUntisException(response.getCompleteErrorMessage());
 
