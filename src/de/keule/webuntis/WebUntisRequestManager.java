@@ -22,7 +22,12 @@ public class WebUntisRequestManager {
 
 	public static WebUntisResponse requestPOST(String method, WebUntisSessionInfo session, String endPoint,
 			String school, String params) throws IOException {
-		final URL url = new URL(session.getServer() + getEndPoint(endPoint) + "?school=" + school);
+		final URL url;
+		try {
+			url = new URI(session.getServer() + getEndPoint(endPoint) + "?school=" + school).toURL();
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
 		if (params == null || params.isEmpty())
 			params = "{}";
 		final String request = "{\"id\":\"" + session.getRequestId() + "\",\"method\":\"" + method + "\",\"params\":"
@@ -84,8 +89,12 @@ public class WebUntisRequestManager {
 	}
 
 	public static WebUntisResponse requestGET(WebUntisSessionInfo session, String endPoint) throws IOException {
-		final URL url = new URL(session.getServer() + endPoint);
-
+		final URL url;
+		try {
+			url = new URI(session.getServer() + endPoint).toURL();
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
 		if (printRequests) {
 			System.out.println("Request[GET]: " + url.toExternalForm());
 		}
