@@ -232,6 +232,9 @@ void WebUntisRequestManager.setPrintRequest(boolean value); // Default: false
 boolean WebUntisRequestManager.printRequests();
 ```
 
+# TODO
+- Write tests
+
 # License
 
 This project is licensed under the MIT License. See the LICENSE file for more information.
