@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 public class WebUntisRequestManager {
 	private static String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36 OPR/83.0.4254.46";
-	private static final String DEFAULT_ENDPOINT = "/WebUntis/jsonrpc.do";
+	private static final String DEFAULT_ENDPOINT = "WebUntis/jsonrpc.do";
 	private static boolean printRequests = false;
 
 	public static WebUntisResponse requestPOST(WebUntisRequestMethod method, WebUntisSessionInfo session,
@@ -22,7 +22,12 @@ public class WebUntisRequestManager {
 
 	public static WebUntisResponse requestPOST(String method, WebUntisSessionInfo session, String endPoint,
 			String school, String params) throws IOException {
-		final URL url = new URL(session.getServer() + getEndPoint(endPoint) + "?school=" + school);
+		final URL url;
+		try {
+			url = new URI(session.getServer() + getEndPoint(endPoint) + "?school=" + school).toURL();
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
 		if (params == null || params.isEmpty())
 			params = "{}";
 		final String request = "{\"id\":\"" + session.getRequestId() + "\",\"method\":\"" + method + "\",\"params\":"
@@ -84,8 +89,12 @@ public class WebUntisRequestManager {
 	}
 
 	public static WebUntisResponse requestGET(WebUntisSessionInfo session, String endPoint) throws IOException {
-		final URL url = new URL(session.getServer() + endPoint);
-
+		final URL url;
+		try {
+			url = new URI(session.getServer() + endPoint).toURL();
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
 		if (printRequests) {
 			System.out.println("Request[GET]: " + url.toExternalForm());
 		}
